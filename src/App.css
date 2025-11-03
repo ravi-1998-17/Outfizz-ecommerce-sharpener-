@@ -1,6 +1,15 @@
 #root {
-  --red: #ff5757;
+  --red: #ff5757; 
   --bg: #fafafa;
   --light: #fff;
   --dark: #000;
+  --grey: #747474;
+}
+
+body {
+  color: var(--dark) !important;
+}
+
+.custom-bg {
+  background-color: var(--bg);
 }
