@@ -10,7 +10,9 @@ const Header = ({ onCartClick }) => {
     <Navbar className="py-4" collapseOnSelect expand="lg">
       <Container className="d-flex justify-content-between align-items-center">
         <Navbar.Brand
-          href="#"
+          as={NavLink}
+          to="/"
+          a
           sticky="top"
           className="fs-4 fw-semibold text-uppercase"
         >
