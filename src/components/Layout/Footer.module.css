@@ -1,0 +1,7 @@
+.footerClass {
+    width: 100%;
+    background-color: var(--light) !important;
+    color: var(--dark) !important;
+    text-align: center;
+}
+

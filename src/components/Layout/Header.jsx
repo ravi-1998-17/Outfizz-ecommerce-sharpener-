@@ -6,9 +6,8 @@ import classes from "@/components/Layout/Header.module.css";
 const Header = () => {
   return (
     <>
-      <Navbar className="py-4" collapseOnSelect expand="lg border">
+      <Navbar className="py-4" collapseOnSelect expand="lg">
         <Container
-          fluid
           className="d-flex justify-content-between align-items-center"
         >
           <Navbar.Brand
@@ -25,10 +24,13 @@ const Header = () => {
             className="justify-content-center"
           >
             <Nav className="gap-5">
+              <Nav.Link href="@/../Home.jsx" className={`fs-5 ${classes.navLink}`}>
+                Home
+              </Nav.Link>
               <Nav.Link href="#" className={`fs-5 ${classes.navLink}`}>
                 About
               </Nav.Link>
-              <Nav.Link href="#" className={`fs-5 ${classes.navLink}`}>
+              <Nav.Link href="@/../Store.jsx" className={`fs-5 ${classes.navLink}`}>
                 Store
               </Nav.Link>
               <Nav.Link href="#" className={`fs-5 ${classes.navLink}`}>
@@ -36,7 +38,6 @@ const Header = () => {
               </Nav.Link>
             </Nav>
           </Navbar.Collapse>
-
           <Form className="d-flex justify-content-ceter align-items-center gap-3">
             <i className={`bi bi-cart ${classes.cartIcon}`}></i>
             <SearchInput

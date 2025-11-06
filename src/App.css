@@ -1,5 +1,6 @@
 #root {
-  --red: #ff5757; 
+  --primary: 'DMSans', sans-serif !important;
+  --red: #ff5757;
   --bg: #fafafa;
   --light: #fff;
   --dark: #000;
@@ -7,9 +8,6 @@
 }
 
 body {
+  font-family: var(--primary);
   color: var(--dark) !important;
-}
-
-.custom-bg {
-  background-color: var(--bg);
 }
