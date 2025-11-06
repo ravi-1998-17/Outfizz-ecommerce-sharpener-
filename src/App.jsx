@@ -8,13 +8,15 @@ import Blog from "./pages/Blog/Blog";
 import CartModal from "./components/cart/CartModal";
 import { useEffect, useState } from "react";
 import axios from "axios";
+import CartItem from "./components/cart/Cartitem/CartItem";
 
 function App() {
+  const [products, setProducts] = useState([]);
+  const [cartItems, setCartItems] = useState([]);
   const [showCart, setShowCart] = useState(false);
 
+  //API CALL
   const api = "https://api.escuelajs.co/api/v1/products";
-  const [products, setProducts] = useState([]);
-
   useEffect(() => {
     const fetchData = async () => {
       try {
@@ -28,18 +30,45 @@ function App() {
     fetchData();
   }, []);
 
+  //Adding Items to cart
+  const addToCart = (product) => {
+    console.log(product);
+    setCartItems((prev) => [...prev, { ...product, qty: 1 }]);
+    setShowCart(true);
+  };
+
+  //Deleting Items to cart
+  const onRemoveHandler = (id) => {
+    setCartItems(cartItems.filter((item) => item.id !== id));
+  };
+
+  const handlePurchase = () => {
+    alert("Thanks for shopping!");
+    setCartItems([]);
+    // setShowCart(false);
+  };
+
   return (
     <>
-      <Header onCartClick={() => setShowCart(true)} />
-
+      <Header onCartClick={() => setShowCart(true)} cartItems={cartItems} />
       <Routes>
         <Route path="/" element={<Home />} />
-        <Route path="/store" element={<Store productsData={products} />} />
+        <Route
+          path="/store"
+          element={<Store productsData={products} addToCart={addToCart} />}
+        />
         <Route path="/about" element={<About />} />
         <Route path="/blog" element={<Blog />} />
       </Routes>
 
-      {showCart && <CartModal onClose={() => setShowCart(false)} />}
+      {/* Cart Modal */}
+      <CartModal
+        show={showCart}
+        onClose={() => setShowCart(false)}
+        cartItems={cartItems}
+        onRemove={onRemoveHandler}
+        onPurchase={handlePurchase}
+      />
     </>
   );
 }

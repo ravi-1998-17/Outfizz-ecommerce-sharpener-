@@ -5,14 +5,18 @@ import classes from "@/components/layout/Header.module.css";
 import SearchIpt from "../common/SearchIpt";
 import CartButton from "../cart/CartButton";
 
-const Header = ({ onCartClick }) => {
+const Header = ({ onCartClick, cartItems }) => {
   return (
-    <Navbar className="py-4" collapseOnSelect expand="lg">
+    <Navbar
+      className={`py-4 sticky-top shadow`}
+      style={{ backgroundColor: "var(--bg)" }}
+      collapseOnSelect
+      expand="lg"
+    >
       <Container className="d-flex justify-content-between align-items-center">
         <Navbar.Brand
           as={NavLink}
           to="/"
-          a
           sticky="top"
           className="fs-4 fw-semibold text-uppercase"
         >
@@ -57,15 +61,17 @@ const Header = ({ onCartClick }) => {
           </Nav>
         </Navbar.Collapse>
 
-        <Form className="d-flex justify-content-ceter align-items-center gap-3">
-          <CartButton onCartClick={onCartClick} />
-          <SearchIpt
-            type="text"
-            name="search"
-            placeholder="Search..."
-            onChange={() => console.log("Searching item")}
-          />
-        </Form>
+        <div className="d-flex justify-content-ceter align-items-center gap-3">
+          <CartButton onCartClick={onCartClick} cartItems={cartItems}/>
+          <Form>
+            <SearchIpt
+              type="text"
+              name="search"
+              placeholder="Search..."
+              onChange={() => console.log("Searching item")}
+            />
+          </Form>
+        </div>
       </Container>
     </Navbar>
   );

@@ -1,9 +1,9 @@
-.blog {
+.about {
   height: 25vh;
   background: url("@/assets/store-header.jpg") center;
 }
 
-.blog h1 {
+.about h1 {
   font-size: 5rem !important;
   text-transform: uppercase;
   color: white;

@@ -1,0 +1,10 @@
+.cart {
+  position: absolute;
+  top: 6.1rem;
+  right: 0;
+  width: 22vw;
+  /* height: 100vh; */
+  background-color: #fff;
+  z-index: 1050;
+  overflow-y: scroll;
+}

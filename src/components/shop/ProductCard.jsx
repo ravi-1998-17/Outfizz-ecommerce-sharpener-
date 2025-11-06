@@ -2,7 +2,7 @@ import React from "react";
 import { Container, Row, Col } from "react-bootstrap";
 import Product from "./Product";
 
-const ProductCard = ({ productsData }) => {
+const ProductCard = ({ productsData, addToCart  }) => {
   const categories = {};
 
   productsData.forEach((item) => {
@@ -13,7 +13,6 @@ const ProductCard = ({ productsData }) => {
     categories[CAT].push(item);
   });
 
-  console.log(categories);
 
   return (
     <Container className="my-5">
@@ -24,7 +23,7 @@ const ProductCard = ({ productsData }) => {
           <Row className="g-4">
             {categories[catName].map((product) => (
               <Col key={product.id} xs={12} sm={6} md={3}>
-                <Product product={product} />
+                <Product product={product} addToCart={addToCart} />
               </Col>
             ))}
           </Row>
