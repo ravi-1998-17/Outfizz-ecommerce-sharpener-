@@ -1,0 +1,11 @@
+.store {
+  height: 25vh;
+  background: url("@/assets/store-header.jpg") center;
+}
+
+.store h1 {
+    font-size: 5rem !important;
+    text-transform: uppercase;
+    color: white;
+    text-shadow: 0 5px 5px black;
+}

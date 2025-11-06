@@ -1,0 +1,42 @@
+.cartIcon {
+  background-color: var(--red) !important;
+  color: var(--light);
+  font-size: 1.25rem;
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.cartIcon:hover,
+.cartIcon:focus {
+  background-color: var(--light) !important;
+  color: var(--dark);
+  box-shadow: 0 0 3px 0 var(--red);
+}
+
+.cartButton {
+  position: relative;
+  cursor: pointer;
+}
+
+.badge {
+  position: absolute;
+  top: 0.2rem;
+  right: 0.2rem;
+  transform: translate(40%, -40%);
+  background-color: yellow;
+  color: var(--dark);
+  font-size: 0.7rem;
+  font-weight: bold;
+  padding: 2px 6px;
+  border-radius: 50%;
+  min-width: 18px;
+  text-align: center;
+}
