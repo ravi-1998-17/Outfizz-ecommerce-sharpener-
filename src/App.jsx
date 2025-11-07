@@ -8,7 +8,6 @@ import Blog from "./pages/Blog/Blog";
 import CartModal from "./components/cart/CartModal";
 import { useEffect, useState } from "react";
 import axios from "axios";
-import CartItem from "./components/cart/Cartitem/CartItem";
 import { Spinner } from "react-bootstrap";
 
 function App() {
@@ -19,6 +18,7 @@ function App() {
   });
   const [showCart, setShowCart] = useState(false);
   const [loading, setLoading] = useState(false);
+  const [error, setError] = useState(null);
 
   //API CALL USING AXIOS & ASYNC AWAIT
   const api = "https://api.escuelajs.co/api/v1/products";
@@ -30,7 +30,23 @@ function App() {
         // console.log(res.data);
         setProducts(res.data);
       } catch (err) {
-        console.log(err);
+        console.error("API Error:", err);
+
+        if (err.response) {
+          if (err.response.status === 404) {
+            setError(
+              "⚠️ Oops! Products not found (404). Please check the API URL."
+            );
+          } else if (err.response.status === 500) {
+            setError("🚨 Server is having issues. Please try again later.");
+          } else {
+            setError(`❌ Unexpected error: ${err.response.statusText}`);
+          }
+        } else if (err.request) {
+          setError("🌐 Network error: No response from the server.");
+        } else {
+          setError("❗ Something went wrong while setting up the request.");
+        }
       } finally {
         setLoading(false);
       }
@@ -85,6 +101,23 @@ function App() {
               >
                 <Spinner animation="border" role="status" variant="dark" />
                 <span className="ms-2 fw-semibold">Loading products...</span>
+              </div>
+            ) : error ? (
+              <div
+                className="d-flex justify-content-center align-items-center text-center flex-column"
+                style={{ height: "80vh" }}
+              >
+                <h4 className="text-danger">{error}</h4>
+                <p className="text-muted mt-2">
+                  Try refreshing the page or come back later.
+                </p>
+              </div>
+            ) : products.length === 0 ? (
+              <div
+                className="d-flex justify-content-center align-items-center text-center"
+                style={{ height: "80vh" }}
+              >
+                <h4 className="text-muted">No products found here 😢</h4>
               </div>
             ) : (
               <Store productsData={products} addToCart={addToCart} />
