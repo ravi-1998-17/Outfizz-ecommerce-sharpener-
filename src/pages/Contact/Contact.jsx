@@ -46,7 +46,7 @@ const Contact = () => {
                 outfizz@gmail.com
               </a>
             </p>
-            <div className="d-flex gap-3 mt-3">
+            <div className="d-flex gap-3 mt-3" style={{color: "#747474"}}>
               <i className="bi bi-facebook"></i>
               <i className="bi bi-instagram"></i>
               <i className="bi bi-pinterest"></i>
