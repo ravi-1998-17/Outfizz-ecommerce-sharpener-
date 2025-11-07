@@ -1,13 +1,16 @@
-import React from "react";
+import React, { useMemo } from "react";
 import classes from "@/components/cart/Cart.module.css";
 import CartItem from "./Cartitem/CartItem";
 import { CloseButton, Button } from "react-bootstrap";
 
 const Cart = ({ onClose, cartItems, onRemove, onPurchase }) => {
-  const totalPrice = cartItems.reduce(
-    (total, item) => total + Number(item.price) * Number(item.qty),
-    0
-  );
+  // Derived value with useMemo
+  const totalPrice = useMemo(() => {
+    return cartItems.reduce(
+      (total, item) => total + Number(item.price) * Number(item.qty),
+      0
+    );
+  }, [cartItems]);
 
   return (
     <div
@@ -37,7 +40,9 @@ const Cart = ({ onClose, cartItems, onRemove, onPurchase }) => {
         <h5 className="mb-0">
           Total: <span className="fw-bold">${+totalPrice}</span>
         </h5>
-        <Button variant="dark" onClick={onPurchase}>Purchase</Button>
+        <Button variant="dark" onClick={onPurchase}>
+          Purchase
+        </Button>
       </div>
     </div>
   );

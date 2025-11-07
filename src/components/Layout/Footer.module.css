@@ -1,4 +1,6 @@
 .footerClass {
+    position: absolute;
+    bottom: 0;
     width: 100%;
     background-color: var(--light) !important;
     color: var(--dark) !important;

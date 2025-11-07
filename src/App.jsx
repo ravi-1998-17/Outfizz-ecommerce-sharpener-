@@ -1,14 +1,15 @@
 import "./App.css";
-import { Route, Routes } from "react-router-dom";
+import { Route, Routes, useLocation } from "react-router-dom";
 import Header from "./components/layout/Header";
 import Home from "./pages/Home/Home";
 import Store from "./pages/Store/Store";
 import About from "./pages/About/About";
 import Blog from "./pages/Blog/Blog";
 import CartModal from "./components/cart/CartModal";
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import axios from "axios";
 import { Spinner } from "react-bootstrap";
+import Footer from "./components/Layout/Footer";
 
 function App() {
   const [products, setProducts] = useState([]);
@@ -60,7 +61,7 @@ function App() {
   }, [cartItems]);
 
   //Adding Items to cart
-  const addToCart = (product) => {
+  const addToCart = useCallback((product) => {
     setCartItems((prevItems) => {
       const existingItem = prevItems.find((item) => item.id === product.id);
 
@@ -74,17 +75,21 @@ function App() {
     });
 
     setShowCart(true);
-  };
+  }, []);
 
   //Deleting Items to cart
-  const onRemoveHandler = (id) => {
-    setCartItems(cartItems.filter((item) => item.id !== id));
-  };
+  const onRemoveHandler = useCallback((id) => {
+    setCartItems((prevItems) => prevItems.filter((item) => item.id !== id));
+  }, []);
 
-  const handlePurchase = () => {
+  const handlePurchase = useCallback(() => {
     alert("Thanks for shopping!");
     setCartItems([]);
-  };
+  }, []);
+
+
+   const location = useLocation(); // ✅ get current route
+
 
   return (
     <>
@@ -128,6 +133,8 @@ function App() {
         <Route path="/about" element={<About />} />
         <Route path="/blog" element={<Blog />} />
       </Routes>
+
+          {location.pathname != "/" && <Footer />}
 
       {/* Cart Modal */}
       <CartModal

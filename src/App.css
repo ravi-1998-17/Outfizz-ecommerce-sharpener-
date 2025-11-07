@@ -9,4 +9,5 @@
 body {
   font-family: 'DMSans', sans-serif !important;
   color: var(--dark) !important;
+  background-color: var(--bg);
 }

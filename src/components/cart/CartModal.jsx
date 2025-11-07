@@ -16,4 +16,4 @@ const CartModal = ({ show, onClose, cartItems, onRemove, onPurchase }) => {
   );
 };
 
-export default CartModal;
+export default React.memo(CartModal);

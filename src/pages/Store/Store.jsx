@@ -17,4 +17,4 @@ const Store = ({ productsData, addToCart }) => {
   );
 };
 
-export default Store;
+export default React.memo(Store);
