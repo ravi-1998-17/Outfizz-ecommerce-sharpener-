@@ -58,11 +58,18 @@ const Header = ({ onCartClick, cartItems }) => {
             >
               Blog
             </Nav.Link>
+            <Nav.Link
+              as={NavLink}
+              to="/contact"
+              className={`fs-5 ${classes.navLink}`}
+            >
+              Contact
+            </Nav.Link>
           </Nav>
         </Navbar.Collapse>
 
         <div className="d-flex justify-content-ceter align-items-center gap-3">
-          <CartButton onCartClick={onCartClick} cartItems={cartItems}/>
+          <CartButton onCartClick={onCartClick} cartItems={cartItems} />
           <Form>
             <SearchIpt
               type="text"

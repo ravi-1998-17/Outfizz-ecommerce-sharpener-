@@ -10,6 +10,7 @@ import { useCallback, useEffect, useState } from "react";
 import axios from "axios";
 import { Spinner } from "react-bootstrap";
 import Footer from "./components/Layout/Footer";
+import Contact from "./pages/Contact/Contact";
 
 function App() {
   const [products, setProducts] = useState([]);
@@ -87,9 +88,7 @@ function App() {
     setCartItems([]);
   }, []);
 
-
-   const location = useLocation(); // ✅ get current route
-
+  const location = useLocation(); // ✅ get current route
 
   return (
     <>
@@ -132,9 +131,10 @@ function App() {
 
         <Route path="/about" element={<About />} />
         <Route path="/blog" element={<Blog />} />
+        <Route path="/contact" element={<Contact />} />
       </Routes>
 
-          {location.pathname != "/" && <Footer />}
+      {location.pathname != "/" && <Footer />}
 
       {/* Cart Modal */}
       <CartModal
