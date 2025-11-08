@@ -1,8 +1,13 @@
 import React, { useState } from "react";
 import { Container, Row, Col, Form, Button } from "react-bootstrap";
-import axios from "axios";
+import ContactDatabase from "./ContactDatabase";
 
-const Contact = () => {
+const Contact = ({
+  customerQueryDatabase,
+  fetchingCustomerDatabase,
+  getCustomerData,
+  deleteCustomerRecord
+}) => {
   const [formData, setFormData] = useState({
     name: "",
     email: "",
@@ -14,39 +19,41 @@ const Contact = () => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
-  const handleSubmit = async (e) => {
+  const handleSubmit = (e) => {
     e.preventDefault();
-    try {
-      await axios.post(
-        "https://your-firebase-url.firebaseio.com/contacts.json",
-        formData
-      );
-      alert("Message sent successfully!");
-      setFormData({ name: "", email: "", phone: "", message: "" });
-    } catch (err) {
-      alert("Error sending message.");
-    }
+    customerQueryDatabase(formData);
+    setFormData({ name: "", email: "", phone: "", message: "" });
+  };
+
+  const fetchData = () => {
+    fetchingCustomerDatabase();
   };
 
   return (
-    <Container className="py-5 mt-5">
+    <Container className="py-5 mt-5 h-100vh">
       <Row className="align-items-center">
-        {/* Left Section */}
-        <Col md={5} className="pe-4">
+        {/* ---------- Left Section ---------- */}
+        <Col md={6} className="pe-4">
           <h2 className="fw-bold mb-3" style={{ color: "#ff5757" }}>
             Get in Touch
           </h2>
           <p className="mb-4">I’d like to hear from you!</p>
-          <p>If you have any inquiries or just want to say hi, please use the contact form!</p>
+          <p>
+            If you have any inquiries or just want to say hi, please use the
+            contact form!
+          </p>
 
           <div className="mt-4">
             <p className="mb-1">
               <i className="bi bi-envelope me-2"></i>
-              <a href="mailto:youremail@gmail.com" className="text-decoration-none">
+              <a
+                href="mailto:outfizz@gmail.com"
+                className="text-decoration-none"
+              >
                 outfizz@gmail.com
               </a>
             </p>
-            <div className="d-flex gap-3 mt-3" style={{color: "#747474"}}>
+            <div className="d-flex gap-3 mt-3" style={{ color: "#747474" }}>
               <i className="bi bi-facebook"></i>
               <i className="bi bi-instagram"></i>
               <i className="bi bi-pinterest"></i>
@@ -55,8 +62,8 @@ const Contact = () => {
           </div>
         </Col>
 
-        {/* Right Section */}
-        <Col md={7}>
+        {/* ---------- Right Section ---------- */}
+        <Col md={6}>
           <Form onSubmit={handleSubmit}>
             <Row className="mb-3">
               <Col>
@@ -111,6 +118,38 @@ const Contact = () => {
             </Button>
           </Form>
         </Col>
+      </Row>
+
+      {/* ---------- Fetch Data Section ---------- */}
+      <Row className="mt-5">
+        <Row className="d-flex justify-content-between align-items-center border py-3 px-4 rounded">
+          <Col className="d-flex justify-content-between align-items-center">
+            <span className="fs-4 fw-semibold">Click Button to Fetch Data</span>
+            <Button onClick={fetchData} className="btn btn-warning">
+              Click Me
+            </Button>
+          </Col>
+        </Row>
+
+        {/* ---------- Data Display Section ---------- */}
+        <div className="mt-4 border-start border-3 border-warning rounded">
+          {(getCustomerData || []).length > 0 ? (
+            getCustomerData.map((item) => (
+              <ContactDatabase
+                key={item.id}
+                date={item.date}
+                time={item.time}
+                name={item.name}
+                email={item.email}
+                phone={item.phone}
+                message={item.message}
+                deleteCustomerRecord={() => deleteCustomerRecord(item.id)}
+              />
+            ))
+          ) : (
+            <p className="text-muted mt-3">No data fetched yet...</p>
+          )}
+        </div>
       </Row>
     </Container>
   );

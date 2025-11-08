@@ -1,7 +1,14 @@
 import React from "react";
-import { Card } from "react-bootstrap";
+import { Card, Button } from "react-bootstrap"; 
+import { useNavigate } from "react-router-dom";
 
-const Product = ({ product, addToCart }) => {
+const Product = ({ product }) => {
+  const navigate = useNavigate();
+
+  const handleSeeMore = () => {
+    navigate(`/product/${product.id}`);
+  };
+
   return (
     <Card className="p-2 shadow-sm" style={{ width: "18rem", border: "none" }}>
       <Card.Img
@@ -17,14 +24,16 @@ const Product = ({ product, addToCart }) => {
       <Card.Body>
         <Card.Title className="fs-6 fw-bold">{product.title}</Card.Title>
         <Card.Text className="text-muted">${product.price}</Card.Text>
+
+        <Button
+          onClick={handleSeeMore}
+          variant="dark"
+          className="w-100"
+          style={{ backgroundColor: "var(--red)", border: "none" }}
+        >
+          See More
+        </Button>
       </Card.Body>
-      <button
-        onClick={() => addToCart(product)}
-        className="w-100 btn btn-secondary"
-        style={{ backgroundColor: "var(--red)", border: "none" }}
-      >
-        Add to Cart
-      </button>
     </Card>
   );
 };

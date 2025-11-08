@@ -11,43 +11,47 @@ import axios from "axios";
 import { Spinner } from "react-bootstrap";
 import Footer from "./components/Layout/Footer";
 import Contact from "./pages/Contact/Contact";
+import ProductDetails from "./components/shop/ProductDetails";
 
 function App() {
   const [products, setProducts] = useState([]);
   const [cartItems, setCartItems] = useState(() => {
-    const savedItems = localStorage.getItem("savedItems");
-    return savedItems ? JSON.parse(savedItems) : [];
+    try {
+      const savedItems = localStorage.getItem("savedItems");
+      const parsed = savedItems ? JSON.parse(savedItems) : [];
+      return Array.isArray(parsed) ? parsed : [];
+    } catch (err) {
+      console.error("Error parsing savedItems:", err);
+      return [];
+    }
   });
   const [showCart, setShowCart] = useState(false);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
+  const [getCustomerData, setCustomerData] = useState([]);
 
-  //API CALL USING AXIOS & ASYNC AWAIT
+  //FETCH PRODUCTS USING AXIOS & ASYNC AWAIT
   const api = "https://api.escuelajs.co/api/v1/products";
   useEffect(() => {
     const fetchData = async () => {
       try {
         setLoading(true);
         const res = await axios.get(api);
-        // console.log(res.data);
         setProducts(res.data);
       } catch (err) {
         console.error("API Error:", err);
-
         if (err.response) {
           if (err.response.status === 404) {
-            setError(
-              "⚠️ Oops! Products not found (404). Please check the API URL."
-            );
+            setError("⚠️ Products not found (404). Check the API URL.");
           } else if (err.response.status === 500) {
-            setError("🚨 Server is having issues. Please try again later.");
+            setError("🚨 Server issue. Please try again later.");
           } else {
             setError(`❌ Unexpected error: ${err.response.statusText}`);
           }
         } else if (err.request) {
-          setError("🌐 Network error: No response from the server.");
+          setError("🌐 Network error: No response from server.");
         } else {
-          setError("❗ Something went wrong while setting up the request.");
+          setError("❗ Something went wrong setting up the request.");
         }
       } finally {
         setLoading(false);
@@ -56,12 +60,12 @@ function App() {
     fetchData();
   }, []);
 
-  //Adding items to the local storage
+  //STORE CART IN LOCALSTORAGE
   useEffect(() => {
     localStorage.setItem("savedItems", JSON.stringify(cartItems));
   }, [cartItems]);
 
-  //Adding Items to cart
+  //ADD TO CART
   const addToCart = useCallback((product) => {
     setCartItems((prevItems) => {
       const existingItem = prevItems.find((item) => item.id === product.id);
@@ -78,7 +82,7 @@ function App() {
     setShowCart(true);
   }, []);
 
-  //Deleting Items to cart
+  // REMOVE FROM CART
   const onRemoveHandler = useCallback((id) => {
     setCartItems((prevItems) => prevItems.filter((item) => item.id !== id));
   }, []);
@@ -88,7 +92,68 @@ function App() {
     setCartItems([]);
   }, []);
 
-  const location = useLocation(); // ✅ get current route
+  const location = useLocation(); // get current route
+
+  // FIREBASE URL (no change)
+  const customerDatabase =
+    "https://outfizz-ecommerce-sharpener-db-default-rtdb.firebaseio.com/customer.json";
+
+  // SEND CONTACT FORM DATA
+  const customerQueryDatabase = async (formData) => {
+    const timestamp = new Date();
+
+    const dataWithDate = {
+      ...formData,
+      date: timestamp.toLocaleDateString(),
+      time: timestamp.toLocaleTimeString(),
+    };
+
+    try {
+      const response = await axios.post(customerDatabase, dataWithDate);
+      console.log("Data sent successfully:", response.data);
+    } catch (err) {
+      console.error("Error sending data:", err.message);
+    }
+  };
+
+  // FETCH CONTACT DATABASE DATA
+  const fetchingCustomerDatabase = async () => {
+    try {
+      const response = await axios.get(customerDatabase);
+
+      if (!response.data) {
+        setCustomerData([]);
+        return;
+      }
+
+      // Convert Firebase object into array
+      const dataArray = [];
+      for (const key in response.data) {
+        dataArray.push({
+          id: key,
+          ...response.data[key],
+        });
+      }
+
+      console.log("Fetched Customer Data:", dataArray);
+      setCustomerData(dataArray);
+    } catch (err) {
+      console.error("Error fetching customer data:", err.message);
+    }
+  };
+
+  // DELETE FETCH DATA FROM CONTACT DATABASE DATA
+  const deleteCustomerRecord = async (id) => {
+    try {
+      const deleteUrl = `https://outfizz-ecommerce-sharpener-db-default-rtdb.firebaseio.com/customer/${id}.json`;
+      await axios.delete(deleteUrl);
+      console.log(`Deleted record with id: ${id}`);
+
+      setCustomerData((prevData) => prevData.filter((item) => item.id !== id));
+    } catch (err) {
+      console.error("Error deleting record:", err.message);
+    }
+  };
 
   return (
     <>
@@ -129,9 +194,24 @@ function App() {
           }
         />
 
+        <Route
+          path="/product/:id"
+          element={<ProductDetails addToCart={addToCart} />}
+        />
+
         <Route path="/about" element={<About />} />
         <Route path="/blog" element={<Blog />} />
-        <Route path="/contact" element={<Contact />} />
+        <Route
+          path="/contact"
+          element={
+            <Contact
+              customerQueryDatabase={customerQueryDatabase}
+              fetchingCustomerDatabase={fetchingCustomerDatabase}
+              getCustomerData={getCustomerData}
+              deleteCustomerRecord={deleteCustomerRecord}
+            />
+          }
+        />
       </Routes>
 
       {location.pathname != "/" && <Footer />}
