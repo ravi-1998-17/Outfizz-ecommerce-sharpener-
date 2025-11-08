@@ -5,14 +5,15 @@ import axios from "axios";
 
 const ProductDetails = ({ addToCart }) => {
   const { id } = useParams();
-  const [product, setProduct] = useState(null);
-  const [loading, setLoading] = useState(true);
+  const [product, setProduct] = useState("");
+  const [loading, setLoading] = useState(false);
 
   const api = `https://api.escuelajs.co/api/v1/products/${id}`;
 
   useEffect(() => {
     const fetchProduct = async () => {
       try {
+        setLoading(true)
         const res = await axios.get(api);
         setProduct(res.data);
       } catch (err) {

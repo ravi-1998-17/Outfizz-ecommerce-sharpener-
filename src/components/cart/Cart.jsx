@@ -6,10 +6,7 @@ import { CloseButton, Button } from "react-bootstrap";
 const Cart = ({ onClose, cartItems, onRemove, onPurchase }) => {
   // Derived value with useMemo
   const totalPrice = useMemo(() => {
-    return cartItems.reduce(
-      (total, item) => total + Number(item.price) * Number(item.qty),
-      0
-    );
+    return cartItems.reduce((total, item) => total + item.price * item.qty, 0);
   }, [cartItems]);
 
   return (

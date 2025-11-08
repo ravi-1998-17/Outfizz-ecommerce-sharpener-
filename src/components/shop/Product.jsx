@@ -4,7 +4,6 @@ import { useNavigate } from "react-router-dom";
 
 const Product = ({ product }) => {
   const navigate = useNavigate();
-
   const handleSeeMore = () => {
     navigate(`/product/${product.id}`);
   };

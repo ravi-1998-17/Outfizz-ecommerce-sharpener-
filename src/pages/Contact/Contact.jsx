@@ -5,7 +5,7 @@ import ContactDatabase from "./ContactDatabase";
 const Contact = ({
   customerQueryDatabase,
   fetchingCustomerDatabase,
-  getCustomerData,
+  customerQueries,
   deleteCustomerRecord
 }) => {
   const [formData, setFormData] = useState({
@@ -14,6 +14,7 @@ const Contact = ({
     phone: "",
     message: "",
   });
+
 
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
@@ -25,11 +26,8 @@ const Contact = ({
     setFormData({ name: "", email: "", phone: "", message: "" });
   };
 
-  const fetchData = () => {
-    fetchingCustomerDatabase();
-  };
-
   return (
+    <>
     <Container className="py-5 mt-5 h-100vh">
       <Row className="align-items-center">
         {/* ---------- Left Section ---------- */}
@@ -75,7 +73,7 @@ const Contact = ({
                     value={formData.name}
                     onChange={handleChange}
                     required
-                  />
+                    />
                 </Form.Group>
               </Col>
               <Col>
@@ -125,7 +123,7 @@ const Contact = ({
         <Row className="d-flex justify-content-between align-items-center border py-3 px-4 rounded">
           <Col className="d-flex justify-content-between align-items-center">
             <span className="fs-4 fw-semibold">Click Button to Fetch Data</span>
-            <Button onClick={fetchData} className="btn btn-warning">
+            <Button onClick={() => fetchingCustomerDatabase()} className="btn btn-warning">
               Click Me
             </Button>
           </Col>
@@ -133,8 +131,8 @@ const Contact = ({
 
         {/* ---------- Data Display Section ---------- */}
         <div className="mt-4 border-start border-3 border-warning rounded">
-          {(getCustomerData || []).length > 0 ? (
-            getCustomerData.map((item) => (
+          {customerQueries.length > 0 ? (
+            customerQueries.map((item) => (
               <ContactDatabase
                 key={item.id}
                 date={item.date}
@@ -152,6 +150,7 @@ const Contact = ({
         </div>
       </Row>
     </Container>
+                </>
   );
 };
 

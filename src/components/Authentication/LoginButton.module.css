@@ -1,0 +1,28 @@
+.loginIcon {
+  background-color: var(--red) !important;
+  color: var(--light);
+  font-size: 1.25rem;
+  font-style: normal;
+  height: 50px;
+
+  padding: 0 1rem;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.loginIcon:hover,
+.loginIcon:focus {
+  background-color: var(--light) !important;
+  color: var(--dark);
+  box-shadow: 0 0 3px 0 var(--red);
+}
+
+.loginButton {
+  position: relative;
+  cursor: pointer;
+}
