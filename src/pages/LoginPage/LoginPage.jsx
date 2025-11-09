@@ -3,7 +3,7 @@ import { Col, Row, Image } from "react-bootstrap";
 import AuthenticationForm from "@/components/Authentication/AuthenticationForm";
 import loginPageImg from "@/assets/loginPageImg.jpg";
 
-const LoginPage = () => {
+const LoginPage = ({ onLoginSuccess }) => {
   return (
     <Row className="g-0" style={{ maxHeight: "100vh" }}>
       <Col
@@ -23,7 +23,7 @@ const LoginPage = () => {
 
       <Col>
         <div>
-          <AuthenticationForm />
+          <AuthenticationForm onLoginSuccess={onLoginSuccess}/>
         </div>
       </Col>
     </Row>

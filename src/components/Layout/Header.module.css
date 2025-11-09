@@ -1,7 +1,4 @@
-.navBar {
-  background-color: var(--bg) !important;
 
-}
 .navLink {
   font-weight: 500 !important;
   color: var(--dark) !important;

@@ -1,9 +1,10 @@
 .loginIcon {
-  background-color: var(--red) !important;
-  color: var(--light);
-  font-size: 1.25rem;
+  border: 1px solid var(--red) !important;
+  border-radius: 12px;
+  color: var(--red);
+  font-size: 1.15rem;
   font-style: normal;
-  height: 50px;
+  height: 45px;
 
   padding: 0 1rem;
 
@@ -17,7 +18,7 @@
 
 .loginIcon:hover,
 .loginIcon:focus {
-  background-color: var(--light) !important;
+  background-color: var(--bg) !important;
   color: var(--dark);
   box-shadow: 0 0 3px 0 var(--red);
 }

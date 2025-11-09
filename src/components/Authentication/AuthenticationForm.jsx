@@ -1,8 +1,9 @@
 import React, { useState } from "react";
 import { Form, Button, Card, Spinner } from "react-bootstrap";
-import { auth } from "@/firebase"; // <-- import our firebase auth
+import { auth } from "@/firebase"; 
 import {
   createUserWithEmailAndPassword,
+  onAuthStateChanged,
   signInWithEmailAndPassword,
   signOut,
 } from "firebase/auth";
@@ -42,6 +43,7 @@ const AuthenticationForm = ({ onLoginSuccess }) => {
       }
     } catch (err) {
       setError(err.message);
+      console.log(err)
     } finally {
       setLoader(false);
     }
