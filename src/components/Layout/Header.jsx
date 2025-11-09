@@ -9,12 +9,12 @@ import LoginButton from "../Authentication/LoginButton";
 const Header = ({ onCartClick, cartItems, onLogout }) => {
   return (
     <Navbar
-      className={`py-4 sticky-top shadow`}
-      style={{ backgroundColor: "var(--bg)" }}
-      collapseOnSelect
       expand="lg"
+      className="py-3 shadow sticky-top"
+      style={{ backgroundColor: "var(--bg)" }}
     >
       <Container className="d-flex justify-content-between align-items-center px-3">
+        {/* Logo */}
         <Navbar.Brand
           as={NavLink}
           to="/"
@@ -23,19 +23,21 @@ const Header = ({ onCartClick, cartItems, onLogout }) => {
           Outfizz & Co.
         </Navbar.Brand>
 
-        <Navbar.Toggle aria-controls="responsive-navbar-nav" />
+        {/* Top-right actions on mobile + desktop */}
+        <div className="d-flex align-items-center gap-2 order-lg-2">
+          <CartButton onCartClick={onCartClick} cartItems={cartItems} />
+          <LoginButton onLogout={onLogout} />
+          {/* Hamburger button visible on mobile */}
+          <Navbar.Toggle aria-controls="navbar-collapse" />
+        </div>
 
+        {/* Collapsible nav links + search */}
         <Navbar.Collapse
-          id="responsive-navbar-nav"
-          className="justify-content-center"
+          id="navbar-collapse"
+          className="order-lg-1 mt-3 mt-lg-0"
         >
-          <Nav className="gap-3">
-            <Nav.Link
-              as={NavLink}
-              to="/"
-              end
-              className={`fs-5 ${classes.navLink}`}
-            >
+          <Nav className="flex-column flex-lg-row gap-2 gap-lg-3 align-items-start align-items-lg-center">
+            <Nav.Link as={NavLink} to="/" end className={`fs-5 ${classes.navLink}`}>
               Home
             </Nav.Link>
             <Nav.Link as={NavLink} to="/about" className={`fs-5 ${classes.navLink}`}>
@@ -50,35 +52,28 @@ const Header = ({ onCartClick, cartItems, onLogout }) => {
             <Nav.Link as={NavLink} to="/contact" className={`fs-5 ${classes.navLink}`}>
               Contact
             </Nav.Link>
-          </Nav>
 
-          <Form className="d-lg-none mt-3 w-100">
-            <SearchIpt
-              type="text"
-              name="search"
-              placeholder="Search..."
-              onChange={() => console.log("Searching item")}
-            />
-          </Form>
+            {/* Search bar inside menu on mobile */}
+            <Form className="d-lg-none mt-3 w-100">
+              <SearchIpt
+                type="text"
+                name="search"
+                placeholder="Search..."
+                onChange={() => console.log("Searching item")}
+              />
+            </Form>
+          </Nav>
         </Navbar.Collapse>
 
-        <div className={"px-3"}>
-          <CartButton onCartClick={onCartClick} cartItems={cartItems} />
-        </div>
-
-        <div className="d-none d-lg-flex justify-content-center align-items-center gap-3">
-          <Form>
-            <SearchIpt
-              type="text"
-              name="search"
-              placeholder="Search..."
-              onChange={() => console.log("Searching item")}
-            />
-          </Form>
-
-          {/* Logout button */}
-          <LoginButton onLogout={onLogout} />
-        </div>
+        {/* Desktop search bar */}
+        <Form className="d-none d-lg-block ms-3">
+          <SearchIpt
+            type="text"
+            name="search"
+            placeholder="Search..."
+            onChange={() => console.log("Searching item")}
+          />
+        </Form>
       </Container>
     </Navbar>
   );
