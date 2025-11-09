@@ -1,14 +1,10 @@
 import React, { useState } from "react";
 import { Form, Button, Card, Spinner } from "react-bootstrap";
-import { auth } from "@/firebase"; 
-import {
-  createUserWithEmailAndPassword,
-  onAuthStateChanged,
-  signInWithEmailAndPassword,
-  signOut,
-} from "firebase/auth";
+import axios from "axios";
 
 const AuthenticationForm = ({ onLoginSuccess }) => {
+  const AUTH_API_KEY = "AIzaSyAIHXEVXIfCWHYwW5VQ5EDj8Q3c26lXPAk";
+
   const [isLogin, setIsLogin] = useState(true);
   const [formData, setFormData] = useState({
     name: "",
@@ -30,20 +26,35 @@ const AuthenticationForm = ({ onLoginSuccess }) => {
     setLoader(true);
     setError("");
 
+    const url = isLogin
+      ? `https://identitytoolkit.googleapis.com/v1/accounts:signInWithPassword?key=${AUTH_API_KEY}`
+      : `https://identitytoolkit.googleapis.com/v1/accounts:signUp?key=${AUTH_API_KEY}`;
+
     try {
+      const response = await axios.post(url, {
+        email: formData.email,
+        password: formData.password,
+        returnSecureToken: true,
+      });
+
+      // JWT Token (idToken)
+      console.log("JWT Token (idToken):", response.data.idToken);
+      console.log("Refresh Token:", response.data.refreshToken);
+
+      // store token in localStorage for future API calls
+      localStorage.setItem("token", response.data.idToken);
+
       if (isLogin) {
-        // LOGIN EXISTING USER
-        await signInWithEmailAndPassword(auth, formData.email, formData.password);
-        onLoginSuccess(); // tell App.js user is logged in
+        onLoginSuccess(); // notify parent that login succeeded
       } else {
-        // CREATE NEW USER
-        await createUserWithEmailAndPassword(auth, formData.email, formData.password);
-        alert("Account created successfully! Now login.");
+        alert("Account created successfully! Please login.");
         setIsLogin(true);
       }
     } catch (err) {
-      setError(err.message);
-      console.log(err)
+      console.error("Auth error:", err);
+      setError(
+        "Authentication failed. Please check your email and password."
+      );
     } finally {
       setLoader(false);
     }

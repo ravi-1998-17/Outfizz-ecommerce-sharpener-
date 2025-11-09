@@ -1,9 +1,13 @@
-import ProductCard from "@/components/shop/ProductCard";
-import React from "react";
+import React, { useContext } from "react";
 import { Container } from "react-bootstrap";
 import classes from "@/pages/Store/Store.module.css";
+import ProductCard from "@/components/shop/ProductCard";
+import { shopContext } from "@/components/contexts/ShopContext";
+import { Loader, ErrorMessage, EmptyState } from "@/components/common/StatusComponents";
 
-const Store = ({ productsData, addToCart }) => {
+const Store = () => {
+  const { productState, addToCart } = useContext(shopContext);
+
   return (
     <>
       <Container
@@ -12,7 +16,16 @@ const Store = ({ productsData, addToCart }) => {
       >
         <h1>Store</h1>
       </Container>
-      <ProductCard productsData={productsData} addToCart={addToCart} />
+
+      {productState.loading ? (
+        <Loader message="Loading products..." />
+      ) : productState.error ? (
+        <ErrorMessage message={productState.error} />
+      ) : productState.products.length === 0 ? (
+        <EmptyState message="No products found here 😢" />
+      ) : (
+        <ProductCard productsData={productState.products} addToCart={addToCart} />
+      )}
     </>
   );
 };

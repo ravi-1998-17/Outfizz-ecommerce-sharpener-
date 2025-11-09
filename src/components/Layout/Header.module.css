@@ -1,6 +1,7 @@
 
 .navLink {
-  font-weight: 500 !important;
+  font-size: 1.1rem !important;
+  font-weight: 400 !important;
   color: var(--dark) !important;
 }
 

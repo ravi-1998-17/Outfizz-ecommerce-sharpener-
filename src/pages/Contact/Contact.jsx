@@ -1,13 +1,13 @@
-import React, { useState } from "react";
+import React, { useContext, useState } from "react";
 import { Container, Row, Col, Form, Button } from "react-bootstrap";
 import ContactDatabase from "./ContactDatabase";
+import contactContext from "@/components/contexts/ContactContext";
 
-const Contact = ({
-  customerQueryDatabase,
-  fetchingCustomerDatabase,
-  customerQueries,
-  deleteCustomerRecord
-}) => {
+const Contact = () => {
+
+  const {customerQueryDatabase, fetchingCustomerDatabase, customerQueries, deleteCustomerRecord} = useContext(contactContext)
+
+
   const [formData, setFormData] = useState({
     name: "",
     email: "",
