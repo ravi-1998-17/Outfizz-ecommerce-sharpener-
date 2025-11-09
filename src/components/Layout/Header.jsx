@@ -1,7 +1,7 @@
 import React from "react";
 import { Container, Form, Nav, Navbar } from "react-bootstrap";
 import { NavLink } from "react-router-dom";
-import classes from "@/components/layout/Header.module.css";
+import classes from "@/components/Layout/Header.module.css";
 import SearchIpt from "../common/SearchIpt";
 import CartButton from "../cart/CartButton";
 
