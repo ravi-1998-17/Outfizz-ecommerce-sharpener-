@@ -9,8 +9,8 @@ import About from "./pages/About/About";
 import Blog from "./pages/Blog/Blog";
 import Contact from "./pages/Contact/Contact";
 // Layouts
-import Header from "./components/layout/Header";
-import Footer from "./components/layout/Footer";
+import Header from "./components/Layout/Header";
+import Footer from "./components/Layout/Footer";
 // Child Comps
 import CartModal from "./components/cart/CartModal";
 import axios from "axios";
