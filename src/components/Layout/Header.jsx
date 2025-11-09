@@ -4,8 +4,9 @@ import { NavLink } from "react-router-dom";
 import classes from "@/components/Layout/Header.module.css";
 import SearchIpt from "../common/SearchIpt";
 import CartButton from "../cart/CartButton";
+import LoginButton from "../Authentication/LoginButton";
 
-const Header = ({ onCartClick, cartItems }) => {
+const Header = ({ onCartClick, cartItems, onLogout }) => {
   return (
     <Navbar
       className={`py-4 sticky-top shadow`}
@@ -23,8 +24,6 @@ const Header = ({ onCartClick, cartItems }) => {
         </Navbar.Brand>
 
         <Navbar.Toggle aria-controls="responsive-navbar-nav" />
-
-       
 
         <Navbar.Collapse
           id="responsive-navbar-nav"
@@ -63,10 +62,9 @@ const Header = ({ onCartClick, cartItems }) => {
           </Form>
         </Navbar.Collapse>
 
-
-          <div className={"px-3"}>
-            <CartButton onCartClick={onCartClick} cartItems={cartItems} />
-          </div>
+        <div className={"px-3"}>
+          <CartButton onCartClick={onCartClick} cartItems={cartItems} />
+        </div>
 
         <div className="d-none d-lg-flex justify-content-center align-items-center gap-3">
           <Form>
@@ -77,7 +75,9 @@ const Header = ({ onCartClick, cartItems }) => {
               onChange={() => console.log("Searching item")}
             />
           </Form>
-          {/* Add LoginButton here if needed */}
+
+          {/* Logout button */}
+          <LoginButton onLogout={onLogout} />
         </div>
       </Container>
     </Navbar>

@@ -17,6 +17,10 @@ import axios from "axios";
 import ProductDetails from "./components/shop/ProductDetails";
 import LoginPage from "./pages/LoginPage/LoginPage";
 
+//HANDLE LOGIN & LOGOUT
+import { onAuthStateChanged, signOut } from "firebase/auth";
+import { auth } from "./firebase";
+
 function App() {
   const [products, setProducts] = useState([]);
   const [cartItems, setCartItems] = useState(() => {
@@ -31,7 +35,7 @@ function App() {
   const [customerQueries, setCustomerQueries] = useState([]);
 
   // Login and Logout
-  const [isLoggedIn, setIsLoggedIn] = useState(true);
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
 
   //FETCH PRODUCTS USING AXIOS & ASYNC AWAIT
   const api = "https://api.escuelajs.co/api/v1/products";
@@ -164,16 +168,32 @@ function App() {
     [customerDatabase]
   );
 
+  // WATCH USER STATE
+  useEffect(() => {
+    const unsubscribe = onAuthStateChanged(auth, (user) => {
+      if (user) setIsLoggedIn(true);
+      else setIsLoggedIn(false);
+    });
+    return () => unsubscribe();
+  }, []);
+
+  // logout
+  const handleLogout = async () => {
+    await signOut(auth);
+    setIsLoggedIn(false);
+  };
+
   return (
     <>
       <>
         {!isLoggedIn ? (
-          <LoginPage />
+          <LoginPage onLoginSuccess={() => setIsLoggedIn(true)} />
         ) : (
           <>
             <Header
               onCartClick={() => setShowCart(true)}
               cartItems={cartItems}
+              onLogout={handleLogout}
             />
 
             <Routes>

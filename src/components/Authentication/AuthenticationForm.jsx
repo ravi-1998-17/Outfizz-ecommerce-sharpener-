@@ -1,38 +1,58 @@
 import React, { useState } from "react";
 import { Form, Button, Card, Spinner } from "react-bootstrap";
+import { auth } from "@/firebase"; // <-- import our firebase auth
+import {
+  createUserWithEmailAndPassword,
+  signInWithEmailAndPassword,
+  signOut,
+} from "firebase/auth";
 
-const AuthenticationForm = () => {
-  const [isLogin, setIsLogin] = useState(true); 
+const AuthenticationForm = ({ onLoginSuccess }) => {
+  const [isLogin, setIsLogin] = useState(true);
   const [formData, setFormData] = useState({
     name: "",
     email: "",
     password: "",
   });
-  const [loader, setLoader] = useState(false)
+  const [loader, setLoader] = useState(false);
+  const [error, setError] = useState("");
 
+  // handle input change
   const handleChange = (e) => {
     const { name, value } = e.target;
     setFormData((prev) => ({ ...prev, [name]: value }));
   };
 
-  const handleSubmit = (e) => {
+  // handle submit
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    if (isLogin) {
-      console.log("Logging in with:", {
-        email: formData.email,
-        password: formData.password,
-      });
-    } else {
-      console.log("Signing up with:", formData);
+    setLoader(true);
+    setError("");
+
+    try {
+      if (isLogin) {
+        // LOGIN EXISTING USER
+        await signInWithEmailAndPassword(auth, formData.email, formData.password);
+        onLoginSuccess(); // tell App.js user is logged in
+      } else {
+        // CREATE NEW USER
+        await createUserWithEmailAndPassword(auth, formData.email, formData.password);
+        alert("Account created successfully! Now login.");
+        setIsLogin(true);
+      }
+    } catch (err) {
+      setError(err.message);
+    } finally {
+      setLoader(false);
     }
   };
 
+  // toggle login/signup
   const toggleForm = () => {
     setIsLogin((prev) => !prev);
-    setFormData({ name: "", email: "", password: "" }); 
+    setFormData({ name: "", email: "", password: "" });
+    setError("");
   };
-
-
 
   return (
     <div
@@ -41,7 +61,7 @@ const AuthenticationForm = () => {
     >
       <Card style={{ width: "100%", maxWidth: "400px", padding: "2rem" }}>
         <h2 className="text-center mb-3" style={{ color: "var(--red)" }}>
-          {isLogin ? "Welcome" : "Create Account"}
+          {isLogin ? "Welcome Back" : "Create Account"}
         </h2>
         <p className="text-center text-muted mb-4">
           {isLogin ? "Login with your email" : "Sign up with your email"}
@@ -93,15 +113,18 @@ const AuthenticationForm = () => {
           >
             {isLogin ? "Login" : "Sign Up"}
           </Button>
+
+          {loader && (
+            <div className="d-flex justify-content-center align-items-center gap-1 mt-2">
+              <Spinner animation="border" size="sm" className="text-danger" />
+              <span>Authenticating...</span>
+            </div>
+          )}
+
+          {error && <p className="text-danger text-center mt-2">{error}</p>}
         </Form>
 
-        <div className="text-center">
-
-          {isLogin && <div className="d-flex justify-content-center align-items-center gap-1 mt-3 mb-4">
-              <Spinner animation="border" size="sm" className="text-danger"></Spinner>
-              <span>Authenticating User</span>
-            </div>}
-
+        <div className="text-center mt-3">
           <Button
             variant="outline-danger"
             onClick={toggleForm}
