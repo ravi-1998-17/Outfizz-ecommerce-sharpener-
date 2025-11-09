@@ -14,22 +14,24 @@ const Header = ({ onCartClick, cartItems }) => {
       collapseOnSelect
       expand="lg"
     >
-      <Container className="d-flex justify-content-between align-items-center">
+      <Container className="d-flex justify-content-between align-items-center px-3">
         <Navbar.Brand
           as={NavLink}
           to="/"
-          sticky="top"
           className="fs-4 fw-semibold text-uppercase"
         >
           Outfizz & Co.
         </Navbar.Brand>
 
         <Navbar.Toggle aria-controls="responsive-navbar-nav" />
+
+       
+
         <Navbar.Collapse
           id="responsive-navbar-nav"
           className="justify-content-center"
         >
-          <Nav className="gap-5">
+          <Nav className="gap-3">
             <Nav.Link
               as={NavLink}
               to="/"
@@ -38,39 +40,36 @@ const Header = ({ onCartClick, cartItems }) => {
             >
               Home
             </Nav.Link>
-            <Nav.Link
-              as={NavLink}
-              to="/about"
-              className={`fs-5 ${classes.navLink}`}
-            >
+            <Nav.Link as={NavLink} to="/about" className={`fs-5 ${classes.navLink}`}>
               About
             </Nav.Link>
-            <Nav.Link
-              as={NavLink}
-              to="/store"
-              className={`fs-5 ${classes.navLink}`}
-            >
+            <Nav.Link as={NavLink} to="/store" className={`fs-5 ${classes.navLink}`}>
               Store
             </Nav.Link>
-            <Nav.Link
-              as={NavLink}
-              to="/blog"
-              className={`fs-5 ${classes.navLink}`}
-            >
+            <Nav.Link as={NavLink} to="/blog" className={`fs-5 ${classes.navLink}`}>
               Blog
             </Nav.Link>
-            <Nav.Link
-              as={NavLink}
-              to="/contact"
-              className={`fs-5 ${classes.navLink}`}
-            >
+            <Nav.Link as={NavLink} to="/contact" className={`fs-5 ${classes.navLink}`}>
               Contact
             </Nav.Link>
           </Nav>
+
+          <Form className="d-lg-none mt-3 w-100">
+            <SearchIpt
+              type="text"
+              name="search"
+              placeholder="Search..."
+              onChange={() => console.log("Searching item")}
+            />
+          </Form>
         </Navbar.Collapse>
 
-        <div className="d-flex justify-content-ceter align-items-center gap-3">
-          <CartButton onCartClick={onCartClick} cartItems={cartItems} />
+
+          <div className={"px-3"}>
+            <CartButton onCartClick={onCartClick} cartItems={cartItems} />
+          </div>
+
+        <div className="d-none d-lg-flex justify-content-center align-items-center gap-3">
           <Form>
             <SearchIpt
               type="text"
@@ -79,8 +78,7 @@ const Header = ({ onCartClick, cartItems }) => {
               onChange={() => console.log("Searching item")}
             />
           </Form>
-          {/* Login Button */}
-
+          {/* Add LoginButton here if needed */}
         </div>
       </Container>
     </Navbar>

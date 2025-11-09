@@ -28,7 +28,7 @@ function App() {
   const [customerQueries, setCustomerQueries] = useState([]);
 
   // Login and Logout
-  const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [isLoggedIn, setIsLoggedIn] = useState(true);
 
   //FETCH PRODUCTS USING AXIOS & ASYNC AWAIT
   const api = "https://api.escuelajs.co/api/v1/products";
