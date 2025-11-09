@@ -9,7 +9,7 @@ import CartModal from "./components/cart/CartModal";
 import { useCallback, useEffect, useState } from "react";
 import axios from "axios";
 import { Spinner } from "react-bootstrap";
-import Footer from "./components/layout/Footer";
+import Footer from "./components/Layout/temp_footer";
 import Contact from "./pages/Contact/Contact";
 import ProductDetails from "./components/shop/ProductDetails";
 import LoginPage from "./pages/LoginPage/LoginPage";
