@@ -2,8 +2,15 @@ import React from "react";
 import { Card, Row, Col, Button } from "react-bootstrap";
 import classes from "@/pages/Contact/ContactDatabase.module.css";
 
-const ContactDatabase = ({ date, time, name, phone, email, message, deleteCustomerRecord }) => {
-
+const ContactDatabase = ({
+  date,
+  time,
+  name,
+  phone,
+  email,
+  message,
+  deleteCustomerRecord,
+}) => {
   return (
     <Card className="my-2 shadow-sm border-0">
       <Card.Body className="p-3">
@@ -16,13 +23,14 @@ const ContactDatabase = ({ date, time, name, phone, email, message, deleteCustom
               <span>
                 <strong>Time:</strong> {time}
               </span>
-              <span>
-                <strong>Name:</strong> {name}
-              </span>
             </div>
           </Col>
           <Col md={2} className="text-md-end text-start mt-2 mt-md-0">
-            <Button variant="outline-danger" size="sm" onClick={deleteCustomerRecord}>
+            <Button
+              variant="outline-danger"
+              size="sm"
+              onClick={deleteCustomerRecord}
+            >
               Delete
             </Button>
           </Col>
@@ -30,6 +38,9 @@ const ContactDatabase = ({ date, time, name, phone, email, message, deleteCustom
 
         <Row className="mb-2 g-0">
           <Col>
+            <strong>Name:</strong>
+            {name}
+            &nbsp; | &nbsp;
             <strong>Phone:</strong> {phone} &nbsp; | &nbsp;
             <strong>Email:</strong> {email}
           </Col>
@@ -47,5 +58,3 @@ const ContactDatabase = ({ date, time, name, phone, email, message, deleteCustom
 };
 
 export default ContactDatabase;
-
-

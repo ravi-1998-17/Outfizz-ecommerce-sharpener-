@@ -4,7 +4,7 @@ import { NavLink } from "react-router-dom";
 import classes from "@/components/layout/Header.module.css";
 import SearchIpt from "../common/SearchIpt";
 import CartButton from "../cart/CartButton";
-import LoginButton from "../Authentication/LoginButton";
+import LoginButton from "../authentication/LoginButton";
 
 const Header = ({ onCartClick, cartItems }) => {
   return (

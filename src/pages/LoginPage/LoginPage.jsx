@@ -1,6 +1,6 @@
 import React from "react";
 import { Col, Row, Image } from "react-bootstrap";
-import AuthenticationForm from "@/components/Authentication/AuthenticationForm";
+import AuthenticationForm from "@/components/authentication/AuthenticationForm";
 import loginPageImg from "@/assets/loginPageImg.jpg";
 import classes from "@/pages/LoginPage/LoginPage.module.css"
 
