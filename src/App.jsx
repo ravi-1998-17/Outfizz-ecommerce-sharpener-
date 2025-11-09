@@ -1,16 +1,19 @@
 import "./App.css";
 import { Route, Routes, useLocation, useNavigate } from "react-router-dom";
-import Header from "./components/layout/Header";
+import { useCallback, useEffect, useState } from "react";
+import { Spinner } from "react-bootstrap";
+// pages
 import Home from "./pages/Home/Home";
 import Store from "./pages/Store/Store";
 import About from "./pages/About/About";
 import Blog from "./pages/Blog/Blog";
-import CartModal from "./components/cart/CartModal";
-import { useCallback, useEffect, useState } from "react";
-import axios from "axios";
-import { Spinner } from "react-bootstrap";
-import Footer from "./components/Layout/Footer";
 import Contact from "./pages/Contact/Contact";
+// Layouts
+import Header from "./components/layout/Header";
+import Footer from "./components/layout/Footer";
+// Child Comps
+import CartModal from "./components/cart/CartModal";
+import axios from "axios";
 import ProductDetails from "./components/shop/ProductDetails";
 import LoginPage from "./pages/LoginPage/LoginPage";
 
