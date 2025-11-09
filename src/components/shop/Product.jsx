@@ -16,7 +16,7 @@ const Product = ({ product }) => {
         alt={product.title}
         style={{
           height: "200px",
-          objectFit: "cover",
+          objectFit: "cover", 
           borderRadius: "10px",
         }}
       />
@@ -25,7 +25,7 @@ const Product = ({ product }) => {
         <Card.Text className="text-muted">${product.price}</Card.Text>
 
         <Button
-          onClick={handleSeeMore}
+          onClick={handleSeeMore} 
           variant="dark"
           className="w-100"
           style={{ backgroundColor: "var(--red)", border: "none" }}
