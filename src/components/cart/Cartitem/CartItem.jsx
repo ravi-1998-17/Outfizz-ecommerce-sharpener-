@@ -1,6 +1,6 @@
 import React from "react";
 import { Card, Button, Form, Row, Col, Image, CloseButton } from "react-bootstrap";
-import classes from "@/components/crt/Cartitem/CartItem.module.css";
+import classes from "@/components/cart/Cartitem/CartItem.module.css";
 
 const CartItem = ({ img, title, qty, price, onRemove, }) => (
   <Card className="mb-3">
