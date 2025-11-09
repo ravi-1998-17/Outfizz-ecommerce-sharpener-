@@ -1,7 +1,7 @@
 import React from "react";
 import { Spinner } from "react-bootstrap";
 
-// Loader Component (Inline loader)
+// Loader Component
 export const Loader = ({ message = "Loading..." }) => (
   <div
     className="d-flex justify-content-center align-items-center"
@@ -12,7 +12,7 @@ export const Loader = ({ message = "Loading..." }) => (
   </div>
 );
 
-// Full-page Loader (like login spinner)
+// Full-page Loader 
 export const FullPageLoader = () => (
   <div
     className="d-flex justify-content-center align-items-center"

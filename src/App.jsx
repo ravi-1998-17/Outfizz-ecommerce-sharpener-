@@ -106,7 +106,6 @@ function App() {
         <LoginPage onLoginSuccess={() => setIsLoggedIn(true)} />
       ) : (
         <>
-          {/* Header only needs onLogout prop now */}
           <Header onLogout={handleLogout} />
 
           <Routes>
@@ -134,7 +133,6 @@ function App() {
 
           {location.pathname !== "/" && <Footer />}
 
-          {/* CartModal now consumes shopContext directly */}
           <CartModal />
         </>
       )}
