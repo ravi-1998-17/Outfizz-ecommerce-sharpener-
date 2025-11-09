@@ -1,4 +1,4 @@
-import LandinPage from "@/components/layout/LandinPage";
+import LandinPage from "@/components/Layout/LandinPage";
 import React from "react";
 
 const Home = () => {
