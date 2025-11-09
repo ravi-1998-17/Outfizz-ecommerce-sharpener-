@@ -1,5 +1,5 @@
 import React from "react";
-import classes from "@/components/Cart/CartButton.module.css";
+import classes from "@/components/cart/CartButton.module.css";
 
 const CartButton = ({ onCartClick, cartItems }) => {
   const cartCount = cartItems.length;
