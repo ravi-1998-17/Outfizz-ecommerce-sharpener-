@@ -2,10 +2,10 @@ import React, { useContext } from "react";
 import ReactDOM from "react-dom";
 import classes from "@/components/cart/CartModal.module.css";
 import Cart from "./Cart";
-import { shopContext } from "@/components/contexts/shopContext";
+import { ShopContext } from "../contexts/ShopContext";
 
 const CartModal = () => {
-  const { showCart } = useContext(shopContext);
+  const { showCart } = useContext(ShopContext);
 
   if (!showCart) return null;
 

@@ -1,10 +1,10 @@
 import React, { useContext } from "react";
 import { Card, Form, Row, Col, Image, CloseButton } from "react-bootstrap";
 import classes from "@/components/cart/Cartitem/CartItem.module.css";
-import { shopContext } from "@/components/contexts/shopContext";
+import { ShopContext } from "@/components/contexts/ShopContext";
 
 const CartItem = ({ item }) => {
-  const { removeFromCart } = useContext(shopContext);
+  const { removeFromCart } = useContext(ShopContext);
 
   return (
     <Card className="mb-3">

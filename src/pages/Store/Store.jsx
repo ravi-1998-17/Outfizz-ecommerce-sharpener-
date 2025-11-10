@@ -2,11 +2,11 @@ import React, { useContext } from "react";
 import { Container } from "react-bootstrap";
 import classes from "@/pages/Store/Store.module.css";
 import ProductCard from "@/components/shop/ProductCard";
-import { shopContext } from "@/components/contexts/ShopContext";
 import { Loader, ErrorMessage, EmptyState } from "@/components/common/StatusComponents";
+import { ShopContext } from "@/components/contexts/ShopContext";
 
 const Store = () => {
-  const { productState, addToCart } = useContext(shopContext);
+  const { productState, addToCart } = useContext(ShopContext);
 
   return (
     <>

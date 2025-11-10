@@ -1,7 +1,7 @@
 import React, { createContext, useReducer, useState, useCallback, useEffect } from "react";
 import axios from "axios";
 
-export const shopContext = createContext();
+export const ShopContext = createContext();
 
 export const ShopProvider = ({ children }) => {
   // CART REDUCER
@@ -134,7 +134,7 @@ export const ShopProvider = ({ children }) => {
   }, [loadCartFromFirebase]);
 
   return (
-    <shopContext.Provider
+    <ShopContext.Provider
       value={{
         cartItems,
         addToCart,
@@ -146,6 +146,6 @@ export const ShopProvider = ({ children }) => {
       }}
     >
       {children}
-    </shopContext.Provider>
+    </ShopContext.Provider>
   );
 };

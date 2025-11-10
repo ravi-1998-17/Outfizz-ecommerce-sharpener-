@@ -5,7 +5,6 @@ import axios from "axios";
 
 // Context
 import contactContext from "./components/contexts/ContactContext";
-import { ShopProvider } from "./components/contexts/ShopContext";
 
 // Layouts
 import Header from "./components/Layout/Header";
@@ -17,6 +16,7 @@ import ProductDetails from "./components/shop/ProductDetails";
 
 // Reusable Status Components
 import { FullPageLoader } from "./components/common/StatusComponents";
+import { ShopProvider } from "./components/contexts/ShopContext";
 
 // ✅ Lazy Load Pages
 const Home = lazy(() => import("./pages/Home/Home"));

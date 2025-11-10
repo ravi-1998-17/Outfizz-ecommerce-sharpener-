@@ -2,11 +2,11 @@ import React, { useContext, useMemo } from "react";
 import classes from "@/components/cart/Cart.module.css";
 import CartItem from "./Cartitem/CartItem";
 import { CloseButton, Button } from "react-bootstrap";
-import { shopContext } from "@/components/contexts/shopContext";
+import { ShopContext } from "../contexts/ShopContext";
 
 const Cart = () => {
 
-  const { cartItems, clearCart, setShowCart } = useContext(shopContext);
+  const { cartItems, clearCart, setShowCart } = useContext(ShopContext);
 
   const totalPrice = useMemo(
     () => cartItems.reduce((total, item) => total + item.price * item.qty, 0),

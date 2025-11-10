@@ -2,10 +2,10 @@ import React, { useEffect, useState, useContext } from "react";
 import { useParams } from "react-router-dom";
 import { Container, Row, Col, Carousel, Button, Spinner } from "react-bootstrap";
 import axios from "axios";
-import { shopContext } from "@/components/contexts/ShopContext";
+import { ShopContext } from "../contexts/ShopContext";
 
 const ProductDetails = () => {
-  const { addToCart } = useContext(shopContext);
+  const { addToCart } = useContext(ShopContext);
   const { id } = useParams();
   const [product, setProduct] = useState(null);
   const [loading, setLoading] = useState(false);

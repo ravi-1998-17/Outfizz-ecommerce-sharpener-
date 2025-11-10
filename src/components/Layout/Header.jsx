@@ -4,11 +4,11 @@ import { NavLink, useNavigate } from "react-router-dom";
 import classes from "@/components/Layout/Header.module.css";
 import CartButton from "../cart/CartButton";
 import LoginButton from "../Authentication/LoginButton";
-import { shopContext } from "@/components/contexts/shopContext";
+import { ShopContext } from "../contexts/ShopContext";
 
 const Header = ({ onLogout }) => {
   const navigate = useNavigate();
-  const { cartItems, setShowCart } = React.useContext(shopContext);
+  const { cartItems, setShowCart } = React.useContext(ShopContext);
 
   const handleChangePassword = () => {
     navigate("/change-password");
