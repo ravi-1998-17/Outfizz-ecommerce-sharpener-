@@ -1,6 +1,6 @@
 import "./App.css";
 import { Route, Routes, useLocation, useNavigate } from "react-router-dom";
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect, useState, useRef } from "react";
 import axios from "axios";
 
 // Context
@@ -36,6 +36,12 @@ function App() {
   const navigate = useNavigate();
   const location = useLocation();
 
+  // 🕒 Auto Logout Duration (in milliseconds)
+  // Example: 2 * 60 * 1000 = 2 minutes
+  const AUTO_LOGOUT_TIME = 2 * 60 * 1000; // ⬅️ Change this manually when needed
+
+  const logoutTimerRef = useRef(null);
+
   const [customerQueries, setCustomerQueries] = useState([]);
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [loadingAuth, setLoadingAuth] = useState(true);
@@ -43,7 +49,7 @@ function App() {
   const customerDatabase =
     "https://outfizz-ecommerce-sharpener-db-default-rtdb.firebaseio.com/customer.json";
 
-  //  STEP 1 — Validate Firebase Token using /accounts:lookup
+  // ✅ STEP 1 — Validate Firebase Token
   const validateToken = useCallback(async () => {
     const token = localStorage.getItem("token");
     if (!token) {
@@ -61,7 +67,6 @@ function App() {
       if (response.data && response.data.users) {
         setIsLoggedIn(true);
       } else {
-        // Token invalid
         localStorage.removeItem("token");
         setIsLoggedIn(false);
       }
@@ -74,12 +79,28 @@ function App() {
     }
   }, []);
 
-  //  STEP 2 — Run token validation when app loads or refreshes
+  // ✅ STEP 2 — Validate token on load
   useEffect(() => {
     validateToken();
   }, [validateToken]);
 
-  //  Contact database handlers
+  // ✅ STEP 3 — Auto Logout after idle time
+  useEffect(() => {
+    if (isLoggedIn) {
+      if (logoutTimerRef.current) clearTimeout(logoutTimerRef.current);
+
+      logoutTimerRef.current = setTimeout(() => {
+        handleLogout();
+        alert("You’ve been automatically logged out due to inactivity.");
+      }, AUTO_LOGOUT_TIME);
+    }
+
+    return () => {
+      if (logoutTimerRef.current) clearTimeout(logoutTimerRef.current);
+    };
+  }, [isLoggedIn]);
+
+  // ✅ STEP 4 — Contact Handlers
   const customerQueryDatabase = useCallback(
     async (formData) => {
       const timestamp = new Date();
@@ -125,20 +146,22 @@ function App() {
     }
   }, []);
 
-  //  Logout handler
-  const handleLogout = () => {
+  // ✅ STEP 5 — Logout Handler
+  const handleLogout = useCallback(() => {
     try {
       localStorage.removeItem("token");
       setIsLoggedIn(false);
-      navigate("/"); // redirect to home
+      navigate("/");
+      if (logoutTimerRef.current) clearTimeout(logoutTimerRef.current);
     } catch (error) {
       console.error("Error during logout:", error);
     }
-  };
+  }, [navigate]);
 
-  //  Loader for validation
+  // ✅ STEP 6 — Loader during authentication
   if (loadingAuth) return <FullPageLoader />;
 
+  // ✅ STEP 7 — Render
   return (
     <ShopProvider>
       {!isLoggedIn ? (
@@ -175,7 +198,6 @@ function App() {
           </Routes>
 
           {location.pathname !== "/" && <Footer />}
-
           <CartModal />
         </>
       )}
