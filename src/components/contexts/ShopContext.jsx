@@ -7,6 +7,8 @@ export const ShopProvider = ({ children }) => {
   // CART REDUCER
   const cartReducer = (state, action) => {
     switch (action.type) {
+      case "SET_CART":
+        return action.payload;
       case "ADD_ITEM": {
         const existingItem = state.find((item) => item.id === action.payload.id);
         if (existingItem) {
@@ -25,71 +27,111 @@ export const ShopProvider = ({ children }) => {
     }
   };
 
-  // PRODUCT REDUCER
-  const productReducer = (state, action) => {
-    switch (action.type) {
-      case "FETCH_START":
-        return { ...state, loading: true, error: null };
-      case "FETCH_SUCCESS":
-        return { ...state, loading: false, products: action.payload };
-      case "FETCH_ERROR":
-        return { ...state, loading: false, error: action.payload };
-      default:
-        return state;
-    }
-  };
-
   // STATES
-  const [cartItems, dispatchCart] = useReducer(
-    cartReducer,
-    JSON.parse(localStorage.getItem("savedItems")) || []
-  );
-  const [productState, dispatchProducts] = useReducer(productReducer, {
-    products: [],
-    loading: false,
-    error: null,
-  });
+  const [cartItems, dispatchCart] = useReducer(cartReducer, []);
+  const [productState, setProductState] = useState({ products: [], loading: false, error: null });
   const [showCart, setShowCart] = useState(false);
+  const [userId, setUserId] = useState(null);
 
-  // SAVE CART TO LOCALSTORAGE
-  useEffect(() => {
-    localStorage.setItem("savedItems", JSON.stringify(cartItems));
-  }, [cartItems]);
-
-  // ADD TO CART
-  const addToCart = useCallback((product) => {
-    dispatchCart({ type: "ADD_ITEM", payload: product });
-    setShowCart(true);
-  }, []);
-
-  // REMOVE FROM CART
-  const removeFromCart = useCallback((id) => {
-    dispatchCart({ type: "REMOVE_ITEM", payload: id });
-  }, []);
-
-  // CLEAR CART / PURCHASE
-  const clearCart = useCallback(() => {
-    dispatchCart({ type: "CLEAR_CART" });
-  }, []);
+  const FIREBASE_URL =
+    "https://outfizz-ecommerce-sharpener-db-default-rtdb.firebaseio.com";
 
   // FETCH PRODUCTS
   useEffect(() => {
     const fetchProducts = async () => {
-      dispatchProducts({ type: "FETCH_START" });
+      setProductState((p) => ({ ...p, loading: true }));
       try {
         const res = await axios.get("https://api.escuelajs.co/api/v1/products");
-        dispatchProducts({ type: "FETCH_SUCCESS", payload: res.data });
+        setProductState({ products: res.data, loading: false, error: null });
       } catch (err) {
-        let message = "Network error";
-        if (err.response) {
-          if (err.response.status === 404) message = "Products not found (404)";
-          else if (err.response.status === 500) message = "Server issue, try later";
-        }
-        dispatchProducts({ type: "FETCH_ERROR", payload: message });
+        setProductState({ products: [], loading: false, error: "Error loading products" });
       }
     };
     fetchProducts();
   }, []);
+
+  // ✅ Get User UID from Firebase Auth Lookup API
+  const fetchUserId = async () => {
+    try {
+      const token = localStorage.getItem("token");
+      if (!token) return null;
+      const res = await axios.post(
+        `https://identitytoolkit.googleapis.com/v1/accounts:lookup?key=AIzaSyAIHXEVXIfCWHYwW5VQ5EDj8Q3c26lXPAk`,
+        { idToken: token }
+      );
+      return res.data?.users?.[0]?.localId || null;
+    } catch {
+      return null;
+    }
+  };
+
+  // ✅ Load User Cart from Firebase
+  const loadCartFromFirebase = useCallback(async (uid) => {
+    try {
+      const res = await axios.get(`${FIREBASE_URL}/userCarts/${uid}.json`);
+      if (res.data) {
+        const cartArray = Object.keys(res.data).map((key) => ({
+          firebaseId: key,
+          ...res.data[key],
+        }));
+        dispatchCart({ type: "SET_CART", payload: cartArray });
+      } else {
+        dispatchCart({ type: "SET_CART", payload: [] });
+      }
+    } catch (err) {
+      console.error("Error fetching cart:", err.message);
+    }
+  }, []);
+
+  // ✅ Save Cart to Firebase
+  const saveCartToFirebase = useCallback(async (uid, cartItems) => {
+    try {
+      await axios.put(`${FIREBASE_URL}/userCarts/${uid}.json`, cartItems);
+    } catch (err) {
+      console.error("Error saving cart:", err.message);
+    }
+  }, []);
+
+  // ✅ Add to Cart
+  const addToCart = useCallback(
+    async (product) => {
+      dispatchCart({ type: "ADD_ITEM", payload: product });
+      setShowCart(true);
+      if (userId) {
+        const updatedCart = [...cartItems, { ...product, qty: 1 }];
+        await saveCartToFirebase(userId, updatedCart);
+      }
+    },
+    [cartItems, userId, saveCartToFirebase]
+  );
+
+  // ✅ Remove from Cart
+  const removeFromCart = useCallback(
+    async (id) => {
+      const updatedCart = cartItems.filter((item) => item.id !== id);
+      dispatchCart({ type: "REMOVE_ITEM", payload: id });
+      if (userId) await saveCartToFirebase(userId, updatedCart);
+    },
+    [cartItems, userId, saveCartToFirebase]
+  );
+
+  // ✅ Clear Cart
+  const clearCart = useCallback(async () => {
+    dispatchCart({ type: "CLEAR_CART" });
+    if (userId) await saveCartToFirebase(userId, []);
+  }, [userId, saveCartToFirebase]);
+
+  // ✅ Load user ID & fetch their cart
+  useEffect(() => {
+    const init = async () => {
+      const uid = await fetchUserId();
+      if (uid) {
+        setUserId(uid);
+        await loadCartFromFirebase(uid);
+      }
+    };
+    init();
+  }, [loadCartFromFirebase]);
 
   return (
     <shopContext.Provider
