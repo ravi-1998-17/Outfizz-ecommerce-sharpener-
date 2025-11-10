@@ -1,19 +1,11 @@
 import "./App.css";
 import { Route, Routes, useLocation, useNavigate } from "react-router-dom";
-import { useCallback, useEffect, useState, useRef } from "react";
+import { Suspense, lazy, useCallback, useEffect, useState, useRef } from "react";
 import axios from "axios";
 
 // Context
 import contactContext from "./components/contexts/ContactContext";
 import { ShopProvider } from "./components/contexts/ShopContext";
-
-// Pages
-import Home from "./pages/Home/Home";
-import Store from "./pages/Store/Store";
-import About from "./pages/About/About";
-import Blog from "./pages/Blog/Blog";
-import Contact from "./pages/Contact/Contact";
-import LoginPage from "./pages/LoginPage/LoginPage";
 
 // Layouts
 import Header from "./components/Layout/Header";
@@ -24,13 +16,16 @@ import CartModal from "./components/cart/CartModal";
 import ProductDetails from "./components/shop/ProductDetails";
 
 // Reusable Status Components
-import {
-  Loader,
-  FullPageLoader,
-  ErrorMessage,
-  EmptyState,
-} from "./components/common/StatusComponents";
-import ChangePassword from "./components/Authentication/ChangePassword";
+import { FullPageLoader } from "./components/common/StatusComponents";
+
+// ✅ Lazy Load Pages
+const Home = lazy(() => import("./pages/Home/Home"));
+const Store = lazy(() => import("./pages/Store/Store"));
+const About = lazy(() => import("./pages/About/About"));
+const Blog = lazy(() => import("./pages/Blog/Blog"));
+const Contact = lazy(() => import("./pages/Contact/Contact"));
+const LoginPage = lazy(() => import("./pages/LoginPage/LoginPage"));
+const ChangePassword = lazy(() => import("./components/Authentication/ChangePassword"));
 
 function App() {
   const navigate = useNavigate();
@@ -38,7 +33,7 @@ function App() {
 
   // 🕒 Auto Logout Duration (in milliseconds)
   // Example: 2 * 60 * 1000 = 2 minutes
-  const AUTO_LOGOUT_TIME = 2 * 60 * 1000; // ⬅️ Change this manually when needed
+  const AUTO_LOGOUT_TIME = 2 * 60 * 1000; // ⬅️ You can change this manually
 
   const logoutTimerRef = useRef(null);
 
@@ -91,7 +86,7 @@ function App() {
 
       logoutTimerRef.current = setTimeout(() => {
         handleLogout();
-        alert("You’ve been automatically logged out due to inactivity.");
+        alert("⚠️ You’ve been automatically logged out due to inactivity.");
       }, AUTO_LOGOUT_TIME);
     }
 
@@ -165,37 +160,41 @@ function App() {
   return (
     <ShopProvider>
       {!isLoggedIn ? (
-        <LoginPage onLoginSuccess={() => setIsLoggedIn(true)} />
+        <Suspense fallback={<FullPageLoader />}>
+          <LoginPage onLoginSuccess={() => setIsLoggedIn(true)} />
+        </Suspense>
       ) : (
         <>
           <Header onLogout={handleLogout} />
 
-          <Routes>
-            <Route path="/" element={<Home />} />
-            <Route path="/store" element={<Store />} />
-            <Route path="/product/:id" element={<ProductDetails />} />
-            <Route path="/about" element={<About />} />
-            <Route path="/blog" element={<Blog />} />
-            <Route
-              path="/contact"
-              element={
-                <contactContext.Provider
-                  value={{
-                    customerQueryDatabase,
-                    fetchingCustomerDatabase,
-                    customerQueries,
-                    deleteCustomerRecord,
-                  }}
-                >
-                  <Contact />
-                </contactContext.Provider>
-              }
-            />
-            <Route
-              path="/change-password"
-              element={<ChangePassword onClose={() => navigate(-1)} />}
-            />
-          </Routes>
+          <Suspense fallback={<FullPageLoader />}>
+            <Routes>
+              <Route path="/" element={<Home />} />
+              <Route path="/store" element={<Store />} />
+              <Route path="/product/:id" element={<ProductDetails />} />
+              <Route path="/about" element={<About />} />
+              <Route path="/blog" element={<Blog />} />
+              <Route
+                path="/contact"
+                element={
+                  <contactContext.Provider
+                    value={{
+                      customerQueryDatabase,
+                      fetchingCustomerDatabase,
+                      customerQueries,
+                      deleteCustomerRecord,
+                    }}
+                  >
+                    <Contact />
+                  </contactContext.Provider>
+                }
+              />
+              <Route
+                path="/change-password"
+                element={<ChangePassword onClose={() => navigate(-1)} />}
+              />
+            </Routes>
+          </Suspense>
 
           {location.pathname !== "/" && <Footer />}
           <CartModal />
