@@ -1,6 +1,6 @@
 import "./App.css";
 import { Route, Routes, useLocation, useNavigate } from "react-router-dom";
-import { useCallback, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import axios from "axios";
 
 // Context
@@ -37,14 +37,49 @@ function App() {
   const location = useLocation();
 
   const [customerQueries, setCustomerQueries] = useState([]);
-  const [isLoggedIn, setIsLoggedIn] = useState(
-    localStorage.getItem("token") ? true : false
-  );
-  const [loadingAuth, setLoadingAuth] = useState(false);
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [loadingAuth, setLoadingAuth] = useState(true);
 
   const customerDatabase =
     "https://outfizz-ecommerce-sharpener-db-default-rtdb.firebaseio.com/customer.json";
 
+  //  STEP 1 — Validate Firebase Token using /accounts:lookup
+  const validateToken = useCallback(async () => {
+    const token = localStorage.getItem("token");
+    if (!token) {
+      setIsLoggedIn(false);
+      setLoadingAuth(false);
+      return;
+    }
+
+    try {
+      const response = await axios.post(
+        `https://identitytoolkit.googleapis.com/v1/accounts:lookup?key=AIzaSyAIHXEVXIfCWHYwW5VQ5EDj8Q3c26lXPAk`,
+        { idToken: token }
+      );
+
+      if (response.data && response.data.users) {
+        setIsLoggedIn(true);
+      } else {
+        // Token invalid
+        localStorage.removeItem("token");
+        setIsLoggedIn(false);
+      }
+    } catch (error) {
+      console.error("Token validation failed:", error.response?.data || error.message);
+      localStorage.removeItem("token");
+      setIsLoggedIn(false);
+    } finally {
+      setLoadingAuth(false);
+    }
+  }, []);
+
+  //  STEP 2 — Run token validation when app loads or refreshes
+  useEffect(() => {
+    validateToken();
+  }, [validateToken]);
+
+  //  Contact database handlers
   const customerQueryDatabase = useCallback(
     async (formData) => {
       const timestamp = new Date();
@@ -90,15 +125,18 @@ function App() {
     }
   }, []);
 
+  //  Logout handler
   const handleLogout = () => {
     try {
       localStorage.removeItem("token");
       setIsLoggedIn(false);
+      navigate("/"); // redirect to home
     } catch (error) {
       console.error("Error during logout:", error);
     }
   };
 
+  //  Loader for validation
   if (loadingAuth) return <FullPageLoader />;
 
   return (
@@ -129,9 +167,11 @@ function App() {
                   <Contact />
                 </contactContext.Provider>
               }
-              />
-              <Route path="/change-password" element={<ChangePassword onClose={() => navigate(-1)} />} />
-
+            />
+            <Route
+              path="/change-password"
+              element={<ChangePassword onClose={() => navigate(-1)} />}
+            />
           </Routes>
 
           {location.pathname !== "/" && <Footer />}
