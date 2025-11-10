@@ -5,7 +5,7 @@ import Cart from "./Cart";
 import { ShopContext } from "../contexts/ShopContext";
 
 const CartModal = () => {
-  const { showCart } = useContext(ShopContext);
+  // const { showCart } = 
 
   if (!showCart) return null;
 
