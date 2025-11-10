@@ -1,13 +1,18 @@
-import React, { useContext } from "react";
+import React from "react";
 import { Container, Nav, Navbar } from "react-bootstrap";
-import { NavLink } from "react-router-dom";
+import { NavLink, useNavigate } from "react-router-dom";
 import classes from "@/components/Layout/Header.module.css";
 import CartButton from "../cart/CartButton";
 import LoginButton from "../Authentication/LoginButton";
 import { shopContext } from "@/components/contexts/shopContext";
 
 const Header = ({ onLogout }) => {
-  const { cartItems, setShowCart } = useContext(shopContext);
+  const navigate = useNavigate();
+  const { cartItems, setShowCart } = React.useContext(shopContext);
+
+  const handleChangePassword = () => {
+    navigate("/change-password");
+  };
 
   return (
     <Navbar
@@ -26,6 +31,17 @@ const Header = ({ onLogout }) => {
 
         <div className="d-flex align-items-center gap-3 order-lg-2 ms-auto">
           <CartButton onCartClick={() => setShowCart(true)} cartItems={cartItems} />
+
+          {/* 🔹 Change Password Button */}
+          <button
+            onClick={handleChangePassword}
+            className="border-0 bg-transparent position-relative text-danger fw-semibold"
+            style={{ cursor: "pointer" }}
+          >
+            <i className="bi bi-key me-1"></i> Change Pwd
+          </button>
+
+          {/* 🔹 Logout Button */}
           <LoginButton onLogout={onLogout} />
           <Navbar.Toggle aria-controls="navbar-collapse" />
         </div>
@@ -47,6 +63,7 @@ const Header = ({ onLogout }) => {
             <Nav.Link as={NavLink} to="/contact" className={`${classes.navLink}`}>
               Contact
             </Nav.Link>
+            
           </Nav>
         </Navbar.Collapse>
       </Container>

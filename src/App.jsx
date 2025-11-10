@@ -30,6 +30,7 @@ import {
   ErrorMessage,
   EmptyState,
 } from "./components/common/StatusComponents";
+import ChangePassword from "./components/Authentication/ChangePassword";
 
 function App() {
   const navigate = useNavigate();
@@ -128,7 +129,9 @@ function App() {
                   <Contact />
                 </contactContext.Provider>
               }
-            />
+              />
+              <Route path="/change-password" element={<ChangePassword onClose={() => navigate(-1)} />} />
+
           </Routes>
 
           {location.pathname !== "/" && <Footer />}
